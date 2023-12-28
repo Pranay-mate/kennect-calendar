@@ -4,6 +4,7 @@ const moment = require('moment');
 const PORT = 3000;
 const app = express();
 app.use(express.static('./'));
+app.use(express.urlencoded({ extended: true }));
 
 app.get('/calculateDate', (req, res) => {
   try {
