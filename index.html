@@ -13,6 +13,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      flex-direction: column;
       height: 100vh;
     }
 
@@ -22,6 +23,7 @@
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       padding: 20px;
       width: 300px;
+      margin-bottom: 20px;
     }
 
     h1 {
@@ -47,11 +49,22 @@
       cursor: pointer;
     }
 
+    input[type="submit"]:hover {
+      background-color: #45a049;
+    }
+
+    #result {
+      display: none;
+      background-color: #4caf50;
+      color: #fff;
+      padding: 10px;
+      border-radius: 4px;
+    }
   </style>
 </head>
 <body>
-  <form action="/calculateDate" method="GET">
-    <h1>Date Calendar</h1>
+  <form id="dateForm" action="/calculateDate" method="GET">
+    <h1>Calculate Date</h1>
     <label for="method">Method (add/subtract):</label>
     <input type="text" name="method" id="method" required>
     <br>
@@ -69,5 +82,33 @@
     <br>
     <input type="submit" value="Submit">
   </form>
+
+  <div id="result"></div>
+
+  <script>
+    document.getElementById('dateForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+  
+      const formData = new FormData(this);
+      const queryString = new URLSearchParams(formData).toString();
+  
+      fetch(`/calculateDate?${queryString}`, {
+        headers: {
+          'Accept': 'application/json', 
+        },
+      })
+        .then(response => response.json())
+        .then(result => {
+          document.getElementById('result').textContent = `Result: ${result.result}`;
+          document.getElementById('result').style.display = 'block';
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          document.getElementById('result').textContent = 'Error occurred. Please try again.';
+          document.getElementById('result').style.backgroundColor = '#ff0000';
+          document.getElementById('result').style.display = 'block';
+        });
+    });
+  </script>
 </body>
 </html>

@@ -13,7 +13,7 @@ app.get('/calculateDate', (req, res) => {
         return res.status(400).send('Missing required parameters');
     }
 
-    const fromDateMoment = moment(fromDate, 'DD-MM-YYYY');
+    const fromDateMoment = moment(fromDate, 'DD-MMM-YYYY');
 
     let finalValue;
     if (method === 'add') {
@@ -25,10 +25,15 @@ app.get('/calculateDate', (req, res) => {
     }
 
     daysOrWeeks = daysOrWeeks == 'weeks' ? 'weeks':'days';
-        
     fromDateMoment.add(finalValue, daysOrWeeks);
 
-    res.status(200).send(fromDateMoment.format('DD-MMM-YYYY'));
+    let result = fromDateMoment.format('DD-MMM-YYYY');
+
+    if (req.headers.accept && req.headers.accept.includes('application/json')) {
+        return res.json({ result });
+    } else {
+        return res.send(`Result: ${result}`);
+    }
   } catch (error) {
     res.status(400).send('Invalid date format or other error');
   }
