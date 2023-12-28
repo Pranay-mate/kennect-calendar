@@ -36,7 +36,7 @@ app.get('/calculateDate', (req, res) => {
         return res.send(`Result: ${result}`);
     }
   } catch (error) {
-    res.status(400).send('Invalid date format or other error');
+    return res.status(400).send('Invalid date format or other error');
   }
 });
 
